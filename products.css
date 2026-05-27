@@ -257,7 +257,7 @@
 
 /* Image container — fixed height, object-fit cover */
 .prod-card__img {
-  width: 100%;
+  width: 95%;
   height: 240px;
   overflow: hidden;
   background: #f0f0f0;
