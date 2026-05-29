@@ -817,7 +817,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   .about-grid   { grid-template-columns: 1fr; gap: 40px; }
   .contact-grid { grid-template-columns: 1fr; }
   .footer__inner { grid-template-columns: 1fr 1fr; }
-  .footer__brand { grid-column: 1 / -1; }
+  .footer__brand { grid-column: 1 / -1;  margin-top: 32px; margin-bottom: 32px; }
 }
 
 @media (max-width: 640px) {
@@ -833,5 +833,5 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   .trust-grid    { grid-template-columns: 1fr; }
   .form-row      { grid-template-columns: 1fr; }
   .products-cta  { flex-direction: column; align-items: flex-start; }
-  .footer__inner { grid-template-columns: 1fr; gap: 32px; }
+  .footer__inner { grid-template-columns: 1fr; gap: 32px; margin-top: 32px; margin-bottom: 20px; }
 }
