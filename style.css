@@ -756,25 +756,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   max-width: 280px;
 }
 
-.footer__nav h4,
-.footer__contact h4 {
-  font-size: .6rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .18em;
-  color: rgba(255,255,255,.9);
-  margin-bottom: 20px;
-}
-
-.footer__nav ul { display: flex; flex-direction: column; gap: 12px; }
-.footer__nav a {
-  font-size: .84rem;
-  font-weight: 300;
-  color: rgba(255,255,255,.5);
-  transition: color var(--transition);
-}
-.footer__nav a:hover { color: var(--gold); }
-
 .footer__contact ul { display: flex; flex-direction: column; gap: 16px; }
 .footer__contact li {
   display: flex;
