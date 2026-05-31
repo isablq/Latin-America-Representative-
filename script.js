@@ -16,7 +16,7 @@
     }
   }
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll(); // run once on load
+  onScroll();
 
 
   /* ---- MOBILE MENU ---- */
@@ -39,7 +39,7 @@
   });
 
 
-  /* ---- LANGUAGE SWITCHER ---- */
+  /* ---- DESKTOP LANGUAGE SWITCHER (dropdown toggle only) ---- */
   const langToggle   = document.getElementById('langToggle');
   const langDropdown = document.getElementById('langDropdown');
 
@@ -54,38 +54,28 @@
     langToggle.setAttribute('aria-expanded', 'false');
   });
 
-  langDropdown.addEventListener('click', function (e) {
-    e.stopPropagation();
-    const btn = e.target.closest('button');
-    if (btn) {
-      langToggle.childNodes[0].textContent = btn.textContent.slice(0, 2).toUpperCase();
-      langDropdown.classList.remove('open');
-      langToggle.setAttribute('aria-expanded', 'false');
-    }
-  });
+  /* NOTE: language selection (desktop dropdown + mobile buttons)
+     is handled entirely by i18n.js — no duplicate listeners here */
 
 
   /* ---- CONTACT FORM ---- */
   const form        = document.getElementById('contactForm');
   const formSuccess = document.getElementById('formSuccess');
 
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    // Basic HTML5 validation
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-
-    // Show success message and reset
-    formSuccess.classList.add('visible');
-    form.reset();
-
-    setTimeout(function () {
-      formSuccess.classList.remove('visible');
-    }, 5000);
-  });
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      formSuccess.classList.add('visible');
+      form.reset();
+      setTimeout(function () {
+        formSuccess.classList.remove('visible');
+      }, 5000);
+    });
+  }
 
 
   /* ---- INTERSECTION OBSERVER: fade-up animations ---- */
@@ -109,15 +99,9 @@
       },
       { threshold: 0.12 }
     );
-
-    animatables.forEach(function (el) {
-      observer.observe(el);
-    });
+    animatables.forEach(function (el) { observer.observe(el); });
   } else {
-    // Fallback: just show everything
-    animatables.forEach(function (el) {
-      el.classList.add('visible');
-    });
+    animatables.forEach(function (el) { el.classList.add('visible'); });
   }
 
 
