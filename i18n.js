@@ -92,26 +92,79 @@
       if (svg) btn.appendChild(svg);
     });
 
+    /* Update mobile lang buttons active state */
+    document.querySelectorAll('.mobile-lang__btn').forEach(function (btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+    });
+
     /* html lang attribute */
     var htmlLang = { en: 'en', pt: 'pt-BR', es: 'es' };
     document.documentElement.lang = htmlLang[lang] || lang;
   }
 
+  /* ---- Detect language from browser ---- */
+  function detectLang() {
+    /* Portuguese: pt, pt-BR, pt-PT */
+    var ptLangs = ['pt', 'pt-br', 'pt-pt'];
+    /* Spanish: es-* (any Spanish-speaking country) */
+    var esLangs = ['es', 'es-ar', 'es-mx', 'es-co', 'es-cl', 'es-pe', 'es-ve',
+                   'es-ec', 'es-bo', 'es-py', 'es-uy', 'es-cr', 'es-gt', 'es-cu',
+                   'es-do', 'es-hn', 'es-ni', 'es-pa', 'es-sv', 'es-us', 'es-419'];
+
+    var langs = navigator.languages
+      ? Array.from(navigator.languages)
+      : [navigator.language || navigator.userLanguage || DEFAULT_LANG];
+
+    for (var i = 0; i < langs.length; i++) {
+      var code = langs[i].toLowerCase();
+      if (ptLangs.indexOf(code) !== -1 || code.startsWith('pt')) return 'pt';
+      if (esLangs.indexOf(code) !== -1 || code.startsWith('es')) return 'es';
+      if (code.startsWith('en')) return 'en';
+    }
+    return DEFAULT_LANG;
+  }
+
   /* ---- Init ---- */
   function init() {
-    /* Restore saved language */
-    var saved = DEFAULT_LANG;
-    try { saved = localStorage.getItem(STORAGE_KEY) || DEFAULT_LANG; } catch (e) {}
-    applyLang(saved);
+    /* Use saved preference if exists, otherwise detect from browser */
+    var lang = DEFAULT_LANG;
+    try {
+      var saved = localStorage.getItem(STORAGE_KEY);
+      lang = saved || detectLang();
+    } catch (e) {
+      lang = detectLang();
+    }
+    applyLang(lang);
 
-    /* Wire up dropdown buttons */
+    /* Wire up desktop dropdown buttons */
     document.querySelectorAll('.lang-dropdown button').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var map = { 'English': 'en', 'Portugu\u00eas': 'pt', 'Espa\u00f1ol': 'es' };
-        var lang = map[btn.textContent.trim()];
+        var map = { 'English': 'en', 'Português': 'pt', 'Español': 'es' };
+        var lang = map[this.textContent.trim()];
         if (lang) applyLang(lang);
       });
     });
+
+    /* Wire up mobile lang buttons via event delegation */
+    var mobileMenu = document.getElementById('mobileMenu');
+    var hamburger  = document.getElementById('hamburger');
+    if (mobileMenu) {
+      mobileMenu.addEventListener('click', function (e) {
+        var btn = e.target.closest('.mobile-lang__btn');
+        if (btn) {
+          var lang = btn.getAttribute('data-lang');
+          if (lang) {
+            applyLang(lang);
+            /* Close the mobile menu after selecting a language */
+            mobileMenu.classList.remove('open');
+            if (hamburger) {
+              hamburger.classList.remove('open');
+              hamburger.setAttribute('aria-expanded', 'false');
+            }
+          }
+        }
+      });
+    }
   }
 
   if (document.readyState === 'loading') {

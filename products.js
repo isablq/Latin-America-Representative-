@@ -6,7 +6,6 @@
   'use strict';
 
   /* ---- STICKY NAV ---- */
-  // Build the sticky nav dynamically
   const stickyNav = document.createElement('nav');
   stickyNav.className = 'prod-nav-sticky';
   stickyNav.id = 'prodNavSticky';
@@ -14,20 +13,16 @@
   const inner = document.createElement('div');
   inner.className = 'prod-nav-sticky__inner';
 
-  const categories = [
-    { label: 'Brake Systems',      href: '#brake-systems' },
-    { label: 'Tires & Wheels',     href: '#tires-wheels' },
-    { label: 'Suspension',         href: '#suspension' },
-    { label: 'Gears',              href: '#gears' },
-    { label: 'Agricultural Parts', href: '#agricultural-parts' },
-    { label: 'Chemical Products',  href: '#chemical-products' },
-  ];
-
-  categories.forEach(function (cat) {
+  /* Read categories directly from the hero pills (already have data-i18n) */
+  const heroPills = document.querySelectorAll('.prod-nav__pill');
+  heroPills.forEach(function (pill) {
     const a = document.createElement('a');
-    a.href = cat.href;
+    a.href = pill.getAttribute('href');
     a.className = 'prod-nav-sticky__pill';
-    a.textContent = cat.label;
+    /* Copy data-i18n so i18n.js can update this pill too */
+    var key = pill.getAttribute('data-i18n');
+    if (key) a.setAttribute('data-i18n', key);
+    a.textContent = pill.textContent;
     inner.appendChild(a);
   });
 
@@ -35,7 +30,7 @@
   document.body.insertBefore(stickyNav, document.body.firstChild.nextSibling);
 
   /* ---- SHOW/HIDE STICKY NAV on scroll ---- */
-  const hero = document.querySelector('.prod-hero');
+  const hero   = document.querySelector('.prod-hero');
   const navbar = document.getElementById('navbar');
 
   function onScroll() {
@@ -50,8 +45,7 @@
   window.addEventListener('scroll', onScroll, { passive: true });
 
   /* ---- ACTIVE SECTION HIGHLIGHT ---- */
-  const sections = document.querySelectorAll('.cat-section');
-  const heroPills  = document.querySelectorAll('.prod-nav__pill');
+  const sections    = document.querySelectorAll('.cat-section');
   const stickyPills = inner.querySelectorAll('.prod-nav-sticky__pill');
 
   function setActive(id) {
@@ -79,7 +73,7 @@
       const target = document.querySelector(this.getAttribute('href'));
       if (!target) return;
       e.preventDefault();
-      const offset = (navbar ? navbar.offsetHeight : 68) + 60; // 60 = sticky nav height
+      const offset = (navbar ? navbar.offsetHeight : 68) + 60;
       const top = target.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top: top, behavior: 'smooth' });
     });
@@ -92,7 +86,6 @@
   const fadeObs = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry, i) {
       if (entry.isIntersecting) {
-        // stagger within same scroll batch
         entry.target.style.transitionDelay = (i % 4 * 80) + 'ms';
         entry.target.classList.add('visible');
         fadeObs.unobserve(entry.target);
